@@ -16,9 +16,8 @@ namespace DataLayer.Models
 		public string Phone { get; set; }
 		public bool isAdmin { get; set; }
 
-		public User(int id, string name, string surname, string email, string password, string phone, bool isAdmin)
+		public User(string name, string surname, string email, string password, string phone, bool isAdmin)
 		{
-			Id = id;
 			Name = name;
 			Surname = surname;
 			Email = email;

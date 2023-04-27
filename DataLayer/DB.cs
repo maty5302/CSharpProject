@@ -71,8 +71,7 @@ namespace DataLayer
 					sb.Append(item.Name).Append(" ").Append(getSqlType(item)).Append(" PRIMARY KEY");
 				else
 				{
-
-					if (item.PropertyType.IsClass)
+					if (item.PropertyType.IsClass && getSqlType(item)=="INTEGER")
 					{
 						sb.Append(item.Name).Append("Id ").Append(getSqlType(item));
 						sb.Append(" REFERENCES ").Append(item.PropertyType.Name).Append("(Id)");
@@ -91,6 +90,43 @@ namespace DataLayer
 
 			Console.WriteLine(sb);
             using (SqliteConnection connection = new SqliteConnection(_connectionString))
+			{
+				connection.Open();
+				using (SqliteCommand command = connection.CreateCommand())
+				{
+					command.CommandText = sb.ToString();
+					command.ExecuteNonQuery();
+				}
+				connection.Close();
+			}
+		}
+
+		public static void Insert<T>(T item)
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.Append("INSERT INTO ").Append("[").Append(typeof(T).Name).Append("]").AppendLine("(");
+			Type type = typeof(T);
+			var members = type.GetProperties();
+			foreach (var item2 in members)
+			{
+				if (item2.Name.ToLower().Contains("id"))
+					continue;
+				sb.Append(item2.Name);
+				if (item2 != members.Last())
+					sb.AppendLine(",");
+			}
+			sb.AppendLine(") VALUES (");
+			foreach (var item2 in members)
+			{
+				if (item2.Name.ToLower().Contains("id"))
+					continue;
+				sb.Append("'").Append(item2.GetValue(item)).Append("'");
+				if (item2 != members.Last())
+					sb.AppendLine(",");
+			}
+			sb.AppendLine(");");
+			Console.WriteLine(sb);
+			using (SqliteConnection connection = new SqliteConnection(_connectionString))
 			{
 				connection.Open();
 				using (SqliteCommand command = connection.CreateCommand())

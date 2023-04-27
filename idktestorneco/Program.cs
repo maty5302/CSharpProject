@@ -13,7 +13,15 @@ namespace idktestorneco
 			DB.CreateTable<User>();
 			DB.CreateTable<TableReservation>();
 			DB.CreateTable<RTable>();
-            Console.WriteLine(DB.solutionDirectory);
+			Console.WriteLine(DB.solutionDirectory);
+			User u = new User("Matěj","Pipik","mp@vsb.cz","uaC#buh","745879545",true);
+			DB.Insert(u);
+
+			RTable t = new RTable(4);
+			DB.Insert(t);
+			
+			
+
         }
 	}
 }

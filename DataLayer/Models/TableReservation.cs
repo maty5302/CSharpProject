@@ -15,9 +15,8 @@ namespace DataLayer.Models
 		public int NumberOfPeople { get; set; }
 		public bool IsReserved { get; set; }
 
-		public TableReservation(int id, RTable table, User user, DateTime reservationTime, int numberOfPeople, bool isReserved)
+		public TableReservation(RTable table, User user, DateTime reservationTime, int numberOfPeople, bool isReserved)
 		{
-			Id = id;
 			this.table = table;
 			this.user = user;
 			ReservationTime = reservationTime;
