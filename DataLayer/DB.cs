@@ -103,6 +103,8 @@ namespace DataLayer
 
 		public static void Insert<T>(T item)
 		{
+			if (item == null)
+				throw new Exception("Item is null");
 			StringBuilder sb = new StringBuilder();
 			sb.Append("INSERT INTO ").Append("[").Append(typeof(T).Name).Append("]").AppendLine("(");
 			Type type = typeof(T);
@@ -111,7 +113,10 @@ namespace DataLayer
 			{
 				if (item2.Name.ToLower().Contains("id"))
 					continue;
-				sb.Append(item2.Name);
+				else if (item2.PropertyType.IsClass && getSqlType(item2) == "INTEGER")
+					sb.Append(item2.Name).Append("Id");
+				else
+					sb.Append(item2.Name);
 				if (item2 != members.Last())
 					sb.AppendLine(",");
 			}
@@ -120,7 +125,10 @@ namespace DataLayer
 			{
 				if (item2.Name.ToLower().Contains("id"))
 					continue;
-				sb.Append("'").Append(item2.GetValue(item)).Append("'");
+				else if(item2.PropertyType.IsClass && getSqlType(item2) == "INTEGER")
+					sb.Append("'").Append(item2.GetValue(item).GetType().GetProperty("Id").GetValue(item2.GetValue(item))).Append("'");
+				else
+					sb.Append("'").Append(item2.GetValue(item)).Append("'");
 				if (item2 != members.Last())
 					sb.AppendLine(",");
 			}
@@ -134,9 +142,162 @@ namespace DataLayer
 					command.CommandText = sb.ToString();
 					command.ExecuteNonQuery();
 				}
+
+				using (SqliteCommand cmd = connection.CreateCommand())
+				{
+					cmd.CommandText = "SELECT last_insert_rowid()";
+					using (SqliteDataReader reader = cmd.ExecuteReader())
+					{
+						reader.Read();
+						item.GetType().GetProperty("Id").SetValue(item, reader.GetInt32(0));
+					}
+				}
 				connection.Close();
 			}
 		}
 
+		public static void Update<T>(T item)
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.Append("UPDATE ").Append("[").Append(typeof(T).Name).Append("]").AppendLine(" SET ");
+			Type type = typeof(T);
+			var members = type.GetProperties();
+			foreach (var item2 in members)
+			{
+				if (item2.Name.ToLower().Contains("id"))
+					continue;
+				sb.Append(item2.Name).Append(" = '").Append(item2.GetValue(item)).Append("'");
+				if (item2 != members.Last())
+					sb.AppendLine(",");
+			}
+			sb.Append(" WHERE Id = ").AppendLine(item.GetType().GetProperty("Id").GetValue(item).ToString());
+			Console.WriteLine(sb);
+			using (SqliteConnection connection = new SqliteConnection(_connectionString))
+			{
+				connection.Open();
+				using (SqliteCommand command = connection.CreateCommand())
+				{
+					command.CommandText = sb.ToString();
+					command.ExecuteNonQuery();
+				}
+				connection.Close();
+			}
+		}
+
+		public static void Delete<T>(T item)
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.Append("DELETE FROM ").Append("[").Append(typeof(T).Name).Append("]").AppendLine(" WHERE Id = ").AppendLine(item.GetType().GetProperty("Id").GetValue(item).ToString());
+			Console.WriteLine(sb);
+			using (SqliteConnection connection = new SqliteConnection(_connectionString))
+			{
+				connection.Open();
+				using (SqliteCommand command = connection.CreateCommand())
+				{
+					command.CommandText = sb.ToString();
+					command.ExecuteNonQuery();
+				}
+				connection.Close();
+			}
+		}
+
+		public static List<T> SelectAll<T>()
+		{ 
+			StringBuilder sb = new StringBuilder();
+			sb.Append("SELECT * FROM ").Append("[").Append(typeof(T).Name).Append("]");
+			Console.WriteLine(sb);
+			List<T> list = new List<T>();
+			using (SqliteConnection connection = new SqliteConnection(_connectionString))
+			{
+				connection.Open();
+				using (SqliteCommand command = connection.CreateCommand())
+				{
+					command.CommandText = sb.ToString();
+					using (SqliteDataReader reader = command.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							T item = Activator.CreateInstance<T>();
+							Type type = typeof(T);
+							var members = type.GetProperties();
+							foreach (var item2 in members)
+							{
+								if (item2.Name.ToLower().Contains("id"))
+									item2.SetValue(item, reader.GetInt32(reader.GetOrdinal(item2.Name)));
+								else if (item2.PropertyType == typeof(bool))
+									item2.SetValue(item, reader.GetBoolean(reader.GetOrdinal(item2.Name)));
+								else if(item2.PropertyType==typeof(DateTime))
+								{
+									string date = reader.GetString(reader.GetOrdinal(item2.Name));
+									if (date != null)
+										item2.SetValue(item, DateTime.Parse(date));
+								}
+								else if(item2.PropertyType==typeof(Int32))
+								{
+									var idk = reader.GetValue(reader.GetOrdinal(item2.Name));
+									if (idk != null)
+										item2.SetValue(item, Convert.ToInt32(idk));
+								}
+								else if (item2.PropertyType.IsClass && getSqlType(item2) == "INTEGER")
+								{
+									//use select<t> below to get the object
+									int id = reader.GetInt32(reader.GetOrdinal(item2.Name + "Id"));
+									var item3 = Activator.CreateInstance(item2.PropertyType);
+									item3.GetType().GetProperty("Id").SetValue(item3, id);
+									item2.SetValue(item, item3);
+								}
+								else
+									item2.SetValue(item, reader.GetValue(reader.GetOrdinal(item2.Name)));
+							}
+							list.Add(item);
+						}
+					}
+				}
+				connection.Close();
+			}
+			return list;
+		}
+		
+		
+
+		public static T SelectById<T>(int id)
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.Append("SELECT * FROM ").Append("[").Append(typeof(T).Name).Append("] WHERE Id=").Append(id);
+			Console.WriteLine(sb);
+			T item = Activator.CreateInstance<T>();
+			using (SqliteConnection connection = new SqliteConnection(_connectionString))
+			{
+				connection.Open();
+				using (SqliteCommand command = connection.CreateCommand())
+				{
+					command.CommandText = sb.ToString();
+					using (SqliteDataReader reader = command.ExecuteReader())
+					{
+						reader.Read();
+						Type type = typeof(T);
+						var members = type.GetProperties();
+						foreach (var item2 in members)
+						{
+							if (item2.Name.ToLower().Contains("id"))
+								item2.SetValue(item, reader.GetInt32(reader.GetOrdinal(item2.Name)));
+							else if (item2.PropertyType == typeof(bool))
+								item2.SetValue(item, reader.GetBoolean(reader.GetOrdinal(item2.Name)));
+							else if (item2.PropertyType.IsClass && getSqlType(item2) == "INTEGER")
+							{
+								var obj = Activator.CreateInstance(item2.PropertyType);
+								item2.SetValue(item, obj);
+							}
+							else
+								item2.SetValue(item, reader.GetValue(reader.GetOrdinal(item2.Name)));
+						}
+					}
+				}
+				connection.Close();
+			}
+			return item;
+		}
+
+	
 	}
 }

@@ -15,12 +15,19 @@ namespace DataLayer.Models
 		public int NumberOfPeople { get; set; }
 		public bool IsReserved { get; set; }
 
+		public TableReservation()
+		{
+		}
+
 		public TableReservation(RTable table, User user, DateTime reservationTime, int numberOfPeople, bool isReserved)
 		{
 			this.table = table;
 			this.user = user;
 			ReservationTime = reservationTime;
-			NumberOfPeople = numberOfPeople;
+			if (numberOfPeople <= table.NumberOfSeats)
+				NumberOfPeople = numberOfPeople;
+			else
+				return;
 			IsReserved = isReserved;
 		}
 	}

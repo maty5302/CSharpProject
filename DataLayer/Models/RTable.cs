@@ -12,6 +12,10 @@ namespace DataLayer.Models
 		public int NumberOfSeats { get; set; }
 		public bool IsReserved { get; set; }
 
+		public RTable()
+		{
+		}
+
 		public RTable(int NumberOfSeats)
 		{
 			this.NumberOfSeats = NumberOfSeats;
