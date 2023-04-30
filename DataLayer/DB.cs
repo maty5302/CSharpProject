@@ -39,18 +39,18 @@ namespace DataLayer
 
 		private static string getSqlType(PropertyInfo property)
 		{
-			switch(property.PropertyType.Name)
+			switch (property.PropertyType.Name)
 			{
 				case "Int32":
 					return "INTEGER";
 				case "String":
 					return "TEXT";
 				case "Boolean":
-					return "INTEGER";;
+					return "INTEGER"; ;
 				case "DateTime":
 					return "TEXT";
 				default:
-					if(property.PropertyType.IsClass)
+					if (property.PropertyType.IsClass)
 					{
 						return "INTEGER";
 					}
@@ -67,11 +67,11 @@ namespace DataLayer
 			var members = type.GetProperties();
 			foreach (var item in members)
 			{
-				if(item.Name.ToLower().Contains("id"))
+				if (item.Name.ToLower().Contains("id"))
 					sb.Append(item.Name).Append(" ").Append(getSqlType(item)).Append(" PRIMARY KEY");
 				else
 				{
-					if (item.PropertyType.IsClass && getSqlType(item)=="INTEGER")
+					if (item.PropertyType.IsClass && getSqlType(item) == "INTEGER")
 					{
 						sb.Append(item.Name).Append("Id ").Append(getSqlType(item));
 						sb.Append(" REFERENCES ").Append(item.PropertyType.Name).Append("(Id)");
@@ -81,7 +81,7 @@ namespace DataLayer
 				}
 
 
-				if(item!=members.Last())
+				if (item != members.Last())
 					sb.AppendLine(",");
 
 			}
@@ -89,7 +89,7 @@ namespace DataLayer
 			sb.AppendLine(");");
 
 			Console.WriteLine(sb);
-            using (SqliteConnection connection = new SqliteConnection(_connectionString))
+			using (SqliteConnection connection = new SqliteConnection(_connectionString))
 			{
 				connection.Open();
 				using (SqliteCommand command = connection.CreateCommand())
@@ -125,7 +125,7 @@ namespace DataLayer
 			{
 				if (item2.Name.ToLower().Contains("id"))
 					continue;
-				else if(item2.PropertyType.IsClass && getSqlType(item2) == "INTEGER")
+				else if (item2.PropertyType.IsClass && getSqlType(item2) == "INTEGER")
 					sb.Append("'").Append(item2.GetValue(item).GetType().GetProperty("Id").GetValue(item2.GetValue(item))).Append("'");
 				else
 					sb.Append("'").Append(item2.GetValue(item)).Append("'");
@@ -167,7 +167,7 @@ namespace DataLayer
 				if (item2.Name.ToLower().Contains("id"))
 					continue;
 				else if (item2.PropertyType.IsClass && getSqlType(item2) == "INTEGER")
-					sb.Append(item2.Name+"Id").Append(" = '").Append(item2.GetValue(item).GetType().GetProperty("Id").GetValue(item2.GetValue(item))).Append("'");
+					sb.Append(item2.Name + "Id").Append(" = '").Append(item2.GetValue(item).GetType().GetProperty("Id").GetValue(item2.GetValue(item))).Append("'");
 				else
 					sb.Append(item2.Name).Append(" = '").Append(item2.GetValue(item)).Append("'");
 				if (item2 != members.Last())
@@ -199,15 +199,14 @@ namespace DataLayer
 				{
 					command.CommandText = sb.ToString();
 					int rowsAffected = command.ExecuteNonQuery();
-					if (rowsAffected == 0)
-						throw new Exception("No rows affected");
+
 				}
 				connection.Close();
 			}
 		}
 
 		public static List<T> SelectAll<T>()
-		{ 
+		{
 			StringBuilder sb = new StringBuilder();
 			sb.Append("SELECT * FROM ").Append("[").Append(typeof(T).Name).Append("]");
 			Console.WriteLine(sb);
@@ -231,13 +230,13 @@ namespace DataLayer
 									item2.SetValue(item, reader.GetInt32(reader.GetOrdinal(item2.Name)));
 								else if (item2.PropertyType == typeof(bool))
 									item2.SetValue(item, reader.GetBoolean(reader.GetOrdinal(item2.Name)));
-								else if(item2.PropertyType==typeof(DateTime))
+								else if (item2.PropertyType == typeof(DateTime))
 								{
 									string date = reader.GetString(reader.GetOrdinal(item2.Name));
 									if (date != null)
 										item2.SetValue(item, DateTime.Parse(date));
 								}
-								else if(item2.PropertyType==typeof(Int32))
+								else if (item2.PropertyType == typeof(Int32))
 								{
 									var idk = reader.GetValue(reader.GetOrdinal(item2.Name));
 									if (idk != null)
@@ -245,11 +244,11 @@ namespace DataLayer
 								}
 								else if (item2.PropertyType.IsClass && getSqlType(item2) == "INTEGER")
 								{
-									var idk = reader.GetValue(reader.GetOrdinal(item2.Name+"Id"));
+									var idk = reader.GetValue(reader.GetOrdinal(item2.Name + "Id"));
 									var item3 = Activator.CreateInstance(item2.PropertyType);
-									if(item2.PropertyType == typeof(User))
+									if (item2.PropertyType == typeof(User))
 										item3 = SelectById<User>(Convert.ToInt32(idk));
-									else if(item2.PropertyType == typeof(RTable))
+									else if (item2.PropertyType == typeof(RTable))
 										item3 = SelectById<RTable>(Convert.ToInt32(idk));
 
 									item2.SetValue(item, item3);
@@ -265,8 +264,8 @@ namespace DataLayer
 			}
 			return list;
 		}
-		
-		
+
+
 
 		public static T SelectById<T>(int id)
 		{
@@ -324,6 +323,63 @@ namespace DataLayer
 			return item;
 		}
 
-	
+		public static List<T> SelectBy<T>(string column, string value)
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.Append("SELECT * FROM ").Append("[").Append(typeof(T).Name).Append("] WHERE ").Append(column).Append(" = ").Append(value);
+			Console.WriteLine(sb);
+			List<T> list = new List<T>();
+			using (SqliteConnection connection = new SqliteConnection(_connectionString))
+			{
+				connection.Open();
+				using (SqliteCommand command = connection.CreateCommand())
+				{
+					command.CommandText = sb.ToString();
+					using (SqliteDataReader reader = command.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							T item = Activator.CreateInstance<T>();
+							Type type = typeof(T);
+							var members = type.GetProperties();
+							foreach (var item2 in members)
+							{
+								if (item2.Name.ToLower().Contains("id"))
+									item2.SetValue(item, reader.GetInt32(reader.GetOrdinal(item2.Name)));
+								else if (item2.PropertyType == typeof(bool))
+									item2.SetValue(item, reader.GetBoolean(reader.GetOrdinal(item2.Name)));
+								else if (item2.PropertyType == typeof(DateTime))
+								{
+									string date = reader.GetString(reader.GetOrdinal(item2.Name));
+									if (date != null)
+										item2.SetValue(item, DateTime.Parse(date));
+								}
+								else if (item2.PropertyType == typeof(Int32))
+								{
+									var idk = reader.GetValue(reader.GetOrdinal(item2.Name));
+									if (idk != null)
+										item2.SetValue(item, Convert.ToInt32(idk));
+								}
+								else if (item2.PropertyType.IsClass && getSqlType(item2) == "INTEGER")
+								{
+									var idk = reader.GetValue(reader.GetOrdinal(item2.Name + "Id"));
+									var item3 = Activator.CreateInstance(item2.PropertyType);
+									if (item2.PropertyType == typeof(User))
+										item3 = SelectById<User>(Convert.ToInt32(idk));
+									else if (item2.PropertyType == typeof(RTable))
+										item3 = SelectById<RTable>(Convert.ToInt32(idk));
+									item2.SetValue(item, item3);
+								}
+								else
+									item2.SetValue(item, reader.GetValue(reader.GetOrdinal(item2.Name)));
+							}
+							list.Add(item);
+						}
+					}
+				}
+				connection.Close();
+			}
+			return list;
+		}
 	}
 }

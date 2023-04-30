@@ -1,0 +1,35 @@
+﻿@{
+	 ViewData["Title"] = "Login";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Registrace do rezervačního systému</h1>
+
+    <p class="lead">Zadejte údaje pro registraci do rezervačního systému</p>
+
+    <form class="form-check-inline flex-wrap ">
+        <div class="input-group flex-wrap">
+			<label class="form-label" for="uname"><b>Jméno: </b></label>           
+			<input class="form-control" type="text" placeholder="Zadejte jméno" name="uname" required>
+        </div>
+        <div class="input-group flex-wrap">
+			<label class="form-label" for="lastname"><b>Příjmení: </b></label>           
+			<input class="form-control" type="text" placeholder="Zadejte příjmení" name="lastname" required>
+        </div>
+        <div class="input-group flex-wrap">
+			<label class="form-label" for="email"><b>Email: </b></label>           
+			<input class="form-control" type="email" placeholder="Zadejte platný email" name="email" required>
+        </div>
+         <div class="input-group flex-wrap">
+			<label class="form-label" for="password1"><b>Heslo: </b></label>           
+			<input class="form-control" type="password" placeholder="Zvolte vhodné heslo" name="password1" required>
+        </div>
+         <div class="input-group flex-wrap">
+			<label class="form-label" for="password2"><b>Potvrzení hesla: </b></label>           
+			<input class="form-control" type="password" placeholder="Zopakujte heslo" name="password2" required>
+        </div>
+        <button class="btn btn-primary" type="submit">Registrovat</button>
+
+    </form>
+
+</div>
