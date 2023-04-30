@@ -1,0 +1,37 @@
+﻿<Window x:Class="DesktopApp.DetailReservationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DesktopApp"
+        mc:Ignorable="d"
+        Title="Detail rezervace" Height="300" Width="250">
+    <StackPanel>
+        <Label Content="Detail rezervace" HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="20"/>
+        <DockPanel>
+            <Label Content="Jméno: "/>
+            <Label Content="{Binding user.Name}"/>
+        </DockPanel>
+        <DockPanel>
+            <Label Content="Příjmení: "/>
+            <Label Content="{Binding user.Surname}"/>
+        </DockPanel>
+        <DockPanel>
+            <Label Content="Email: "/>
+            <Label Content="{Binding user.Email}"/>
+        </DockPanel>
+        <DockPanel>
+            <Label Content="Telefonní číslo:"/>
+            <Label Content="{Binding user.Phone}"/>
+        </DockPanel>
+        <DockPanel>
+            <Label Content="Datum rezervace: "/>
+            <Label Content="{Binding ReservationTime}"/>
+        </DockPanel>
+        <DockPanel>
+            <Label Content="Počet lidí: "/>
+            <Label Content="{Binding NumberOfPeople}"/>
+        </DockPanel>
+        <Button x:Name="UpdateReservationButton" Click="CloseDetailReservationButton_Click" Content="Zavřít" HorizontalAlignment="Center" Width="150" Margin="0,0,0,10"/>
+    </StackPanel>
+</Window>

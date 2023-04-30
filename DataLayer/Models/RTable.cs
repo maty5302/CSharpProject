@@ -10,11 +10,8 @@ namespace DataLayer.Models
 	{
 		public int Id { get; set; }
 		public int NumberOfSeats { get; set; }
-		public bool IsReserved { get; set; }
 
-		public RTable()
-		{
-		}
+		public RTable() { }
 
 		public RTable(int NumberOfSeats)
 		{

@@ -1,0 +1,21 @@
+﻿<Window x:Class="DesktopApp.UpdateTableWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DesktopApp"
+        mc:Ignorable="d"
+        Title="UpdateTableWindow" Height="180" Width="250">
+    <StackPanel>
+        <Label Content="Aktualizace stolu" HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="20"/>
+        <DockPanel>
+            <Label Content="Číslo stolu: "/>
+            <Label Content="{Binding Id}"/>
+        </DockPanel>
+        <DockPanel>
+            <Label Content="Počet míst k sezení: "/>
+            <TextBox x:Name="people" Text="{Binding NumberOfSeats}"/>
+        </DockPanel>
+        <Button x:Name="UpdateReservationButton" Content="Aktualizovat stůl" Click="UpdateTableButton_Click" HorizontalAlignment="Center" Width="150" Margin="0,0,0,10"/>
+    </StackPanel>
+</Window>

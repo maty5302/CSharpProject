@@ -166,7 +166,10 @@ namespace DataLayer
 			{
 				if (item2.Name.ToLower().Contains("id"))
 					continue;
-				sb.Append(item2.Name).Append(" = '").Append(item2.GetValue(item)).Append("'");
+				else if (item2.PropertyType.IsClass && getSqlType(item2) == "INTEGER")
+					sb.Append(item2.Name+"Id").Append(" = '").Append(item2.GetValue(item).GetType().GetProperty("Id").GetValue(item2.GetValue(item))).Append("'");
+				else
+					sb.Append(item2.Name).Append(" = '").Append(item2.GetValue(item)).Append("'");
 				if (item2 != members.Last())
 					sb.AppendLine(",");
 			}
@@ -195,7 +198,9 @@ namespace DataLayer
 				using (SqliteCommand command = connection.CreateCommand())
 				{
 					command.CommandText = sb.ToString();
-					command.ExecuteNonQuery();
+					int rowsAffected = command.ExecuteNonQuery();
+					if (rowsAffected == 0)
+						throw new Exception("No rows affected");
 				}
 				connection.Close();
 			}
@@ -240,10 +245,13 @@ namespace DataLayer
 								}
 								else if (item2.PropertyType.IsClass && getSqlType(item2) == "INTEGER")
 								{
-									//use select<t> below to get the object
-									int id = reader.GetInt32(reader.GetOrdinal(item2.Name + "Id"));
+									var idk = reader.GetValue(reader.GetOrdinal(item2.Name+"Id"));
 									var item3 = Activator.CreateInstance(item2.PropertyType);
-									item3.GetType().GetProperty("Id").SetValue(item3, id);
+									if(item2.PropertyType == typeof(User))
+										item3 = SelectById<User>(Convert.ToInt32(idk));
+									else if(item2.PropertyType == typeof(RTable))
+										item3 = SelectById<RTable>(Convert.ToInt32(idk));
+
 									item2.SetValue(item, item3);
 								}
 								else
@@ -283,10 +291,28 @@ namespace DataLayer
 								item2.SetValue(item, reader.GetInt32(reader.GetOrdinal(item2.Name)));
 							else if (item2.PropertyType == typeof(bool))
 								item2.SetValue(item, reader.GetBoolean(reader.GetOrdinal(item2.Name)));
+							else if (item2.PropertyType == typeof(DateTime))
+							{
+								string date = reader.GetString(reader.GetOrdinal(item2.Name));
+								if (date != null)
+									item2.SetValue(item, DateTime.Parse(date));
+							}
+							else if (item2.PropertyType == typeof(Int32))
+							{
+								var idk = reader.GetValue(reader.GetOrdinal(item2.Name));
+								if (idk != null)
+									item2.SetValue(item, Convert.ToInt32(idk));
+							}
 							else if (item2.PropertyType.IsClass && getSqlType(item2) == "INTEGER")
 							{
-								var obj = Activator.CreateInstance(item2.PropertyType);
-								item2.SetValue(item, obj);
+								var idk = reader.GetValue(reader.GetOrdinal(item2.Name + "Id"));
+								var item3 = Activator.CreateInstance(item2.PropertyType);
+								if (item2.PropertyType == typeof(User))
+									item3 = SelectById<User>(Convert.ToInt32(idk));
+								else if (item2.PropertyType == typeof(RTable))
+									item3 = SelectById<RTable>(Convert.ToInt32(idk));
+
+								item2.SetValue(item, item3);
 							}
 							else
 								item2.SetValue(item, reader.GetValue(reader.GetOrdinal(item2.Name)));

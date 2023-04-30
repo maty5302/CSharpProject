@@ -16,10 +16,7 @@ namespace DataLayer.Models
 		public string Phone { get; set; }
 		public bool isAdmin { get; set; }
 
-		public User()
-		{
-
-		}
+		public User() { }
 
 		public User(string name, string surname, string email, string password, string phone, bool isAdmin)
 		{

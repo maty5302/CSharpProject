@@ -6,9 +6,58 @@
         xmlns:local="clr-namespace:DesktopApp"
         mc:Ignorable="d"
         Title="Administrace" Height="450" Width="800">
-    <Grid Margin="10">
-        <DataGrid>
-            
-        </DataGrid>
+    <Grid Margin="5">
+        <TabControl>
+            <TabItem Header="Správa rezervací">
+                <DataGrid x:Name="reservations"  ItemsSource="{Binding}" IsReadOnly="True" AutoGenerateColumns="false">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Číslo rezervace" Binding="{Binding Id}"/>
+                        <DataGridTextColumn Header="Číslo stolu" Binding="{Binding table.Id}"/>
+                        <DataGridTextColumn Header="Jméno" Binding="{Binding user.Name}"/>
+                        <DataGridTextColumn Header="Příjmení" Binding="{Binding user.Surname}"/>
+                        <DataGridTextColumn Header="Datum rezervace" Binding="{Binding ReservationTime}"/>
+                        <DataGridTemplateColumn >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Content="Odstranit" Click="delete_reservation" Margin="5"/>
+                                        <Button Content="Upravit" Click="update_reservation" Margin="5"/>
+                                        <Button Content="Zobrazit" Margin="5" Click="detail_reservation"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Správa stolů" >                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="35"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid Grid.Row="0" Grid.Column="0" x:Name="tables" ItemsSource="{Binding}" IsReadOnly="True" AutoGenerateColumns="false">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Číslo stolu" Binding="{Binding Id}"/>
+                            <DataGridTextColumn Header="Počet míst k sezení" Binding="{Binding NumberOfSeats}"/>
+                            <DataGridTemplateColumn >
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="Odstranit" Click="delete_table" Margin="5"></Button>
+                                            <Button Content="Upravit" Click="update_table" Margin="5"></Button>                                            
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button Grid.Row="1" Grid.Column="0" Content="Přidat stůl" Click="create_table" Margin="0,5,0,5"/> 
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
