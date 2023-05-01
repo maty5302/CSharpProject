@@ -326,7 +326,7 @@ namespace DataLayer
 		public static List<T> SelectBy<T>(string column, string value)
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.Append("SELECT * FROM ").Append("[").Append(typeof(T).Name).Append("] WHERE ").Append(column).Append(" = ").Append(value);
+			sb.Append("SELECT * FROM ").Append("[").Append(typeof(T).Name).Append("] WHERE ").Append(column).Append(" = ").Append("'").Append(value).Append("'");
 			Console.WriteLine(sb);
 			List<T> list = new List<T>();
 			using (SqliteConnection connection = new SqliteConnection(_connectionString))
