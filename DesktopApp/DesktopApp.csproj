@@ -11,10 +11,4 @@
     <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Xceed.Wpf.Toolkit.NET5">
-      <HintPath>bin\Debug\net6.0-windows\Xceed.Wpf.Toolkit.NET5.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
