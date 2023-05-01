@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebApp</title>
+    <title>@ViewData["Title"] - Restaurace u bořka</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApp.styles.css" asp-append-version="true" />
@@ -23,14 +23,33 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Domů</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">#Privacy#</a>
                         </li>
+                        @if(LoginManager.Get.User != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Reservation" asp-action="Index">Vytvoření rezervace</a>
+                            </li>
+                        }
                     </ul>          
                        
                     <ul class="navbar-nav">
-                        <form action="/Login/Index">
-                              <button class="btn btn-primary" type="submit" >Log In</button>
-                         </form>
+                        
+                        @if(LoginManager.Get.User is null)
+                        {
+                            <form action="/Login/Index">
+                                  <button class="btn btn-primary" type="submit" >Přihlásit se</button>
+                             </form>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Reservation" asp-action="Index">Moje rezervace</a>
+                            </li>
+							<form action="/Login/Logout">
+								  <button class="btn btn-primary" type="submit" >Odhlásit se</button>
+							 </form>
+                        }
                     </ul>
                 </div>
             </div>
@@ -44,7 +63,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - Restaurace u bořka - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

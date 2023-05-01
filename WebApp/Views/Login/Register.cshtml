@@ -1,32 +1,35 @@
 ﻿@{
-	 ViewData["Title"] = "Login";
+	 ViewData["Title"] = "Registrace";
 }
-
+@model LoginForm
 <div class="text-center">
-    <h1 class="display-4">Registrace do rezervačního systému</h1>
+    <h1 class="display-4">Registrace - restaurace u bořka</h1>
 
     <p class="lead">Zadejte údaje pro registraci do rezervačního systému</p>
 
-    <form class="form-check-inline flex-wrap ">
+    <form class="form-check-inline flex-wrap" method="post" asp-action="ValidateRegister" asp-controller="Login">
         <div class="input-group flex-wrap">
-			<label class="form-label" for="uname"><b>Jméno: </b></label>           
-			<input class="form-control" type="text" placeholder="Zadejte jméno" name="uname" required>
+			<label class="form-label" asp-for="FirstName"><b>Jméno: </b></label>           
+			<input class="form-control" type="text" placeholder="Zadejte jméno" asp-for="FirstName"required>
         </div>
         <div class="input-group flex-wrap">
-			<label class="form-label" for="lastname"><b>Příjmení: </b></label>           
-			<input class="form-control" type="text" placeholder="Zadejte příjmení" name="lastname" required>
+			<label class="form-label" asp-for="LastName"><b>Příjmení: </b></label>           
+			<input class="form-control" type="text" placeholder="Zadejte příjmení" asp-for="LastName" required>
         </div>
         <div class="input-group flex-wrap">
-			<label class="form-label" for="email"><b>Email: </b></label>           
-			<input class="form-control" type="email" placeholder="Zadejte platný email" name="email" required>
+			<label class="form-label" asp-for="Email"><b>Email: </b></label>           
+			<input class="form-control" type="email" placeholder="Zadejte platný email" asp-for="Email" required>
+            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
          <div class="input-group flex-wrap">
-			<label class="form-label" for="password1"><b>Heslo: </b></label>           
-			<input class="form-control" type="password" placeholder="Zvolte vhodné heslo" name="password1" required>
+			<label class="form-label" asp-for="Password"><b>Heslo: </b></label>           
+			<input class="form-control" type="password" placeholder="Zvolte vhodné heslo" asp-for="Password" required>
+            <span asp-validation-for="Password" class="text-danger"></span>
         </div>
          <div class="input-group flex-wrap">
-			<label class="form-label" for="password2"><b>Potvrzení hesla: </b></label>           
-			<input class="form-control" type="password" placeholder="Zopakujte heslo" name="password2" required>
+			<label class="form-label" asp-for="PasswordAgain"><b>Potvrzení hesla: </b></label>           
+			<input class="form-control" type="password" placeholder="Zopakujte heslo" asp-for="PasswordAgain" required>
+            <span asp-validation-for="PasswordAgain" class="text-danger"></span>
         </div>
         <button class="btn btn-primary" type="submit">Registrovat</button>
 

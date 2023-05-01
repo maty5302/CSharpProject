@@ -1,8 +1,17 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Domů";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Utrpení začíná</h1>
+    <h1 class="display-4">Vítejte v rezervačním systému</h1>
+    @if (LoginManager.Get.User != null)
+	{
+		<p class="lead">Jste přihlášen jako @LoginManager.Get.User.Name @LoginManager.Get.User.Surname</p>
+	}
+	else
+	{
+		<p class="lead">Pro přístup do rezervačního systému se prosím přihlašte</p>
+	}
+	<p>Tento rezervační systém je vytvořen pro účely C# předmětu na VŠB-TUO</p>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">Polib mi aaaaaaaaaaaaaaaaaaaaaaaaa</a>.</p>
 </div>

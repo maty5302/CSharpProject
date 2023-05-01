@@ -1,26 +1,46 @@
-﻿@{
-	 ViewData["Title"] = "Login";
-}
+﻿@using WebApp.Models
 
+@{
+	 ViewData["Title"] = "Přihlášení";
+}
+@model LoginForm
 <div class="text-center">
     <h1 class="display-4">Přihlášení do restaurace u bořka</h1>
-
-     <form class="form-check-inline flex-wrap ">
+    @*@using (Html.BeginForm("ValidateLogin","Login",FormMethod.Post))
+    {
+        <div class="input-group ">
+            @Html.LabelFor(m => m.Email, new {@class="control-label"})
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+        <br />
+            @Html.ValidationMessageFor(m=> m.Email)
+        </div>
+        <div class="input-group ">
+            @Html.LabelFor(m => m.Password,new {@class="control-label"})
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+        <br />
+            @Html.ValidationMessageFor(m => m.Password)
+        </div>
+        <a href="/Login/Register">Nemáš účet? Registruj se</a>
+		<button class="btn btn-primary" type="submit">Login</button>
+    }*@
+    <form class="form-check-inline flex-wrap " method="post" asp-action="ValidateLogin" asp-controller="Login">
         <div class="input-group flex-wrap">
-         <label for="uname"><b>E-mail:   </b></label>
-        <input  class="form-control" type="email" placeholder="Zadejte e-mail" name="uname" required><br />
+         <label class="form-label" asp-for="Email"><b>E-mail:   </b></label>
+        <input  class="form-control" asp-for="Email" type="email" placeholder="Zadejte e-mail" name="email" required> 
+        <br />
+        <span asp-validation-for="Email" class="text-danger"></span>
         </div>
     <div class="input-group flex-wrap">        
-        <label class="form-label"  for="psw"><b>Heslo:   </b></label>
-        <input class="form-control" type="password" placeholder="Zadejte heslo" name="psw" required>
+        <label class="form-label"  asp-for="Password"><b>Heslo:   </b></label>
+        <input class="form-control" type="password" placeholder="Zadejte heslo" asp-for="Password" required>
+        <br />
+        <span asp-validation-for="Password" class="text-danger"></span>
     </div>
 
         <a href="/Login/Register">Nemáš účet? Registruj se</a>
-        
         <button class="btn btn-primary" type="submit">Login</button>
     </form>
-
 </div>
-    
- 
 
+
+     
