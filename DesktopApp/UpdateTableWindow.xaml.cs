@@ -1,4 +1,6 @@
-﻿using DataLayer.Models;
+﻿using DataLayer;
+using DataLayer.Models;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,14 +38,14 @@ namespace DesktopApp
 		{
 			if (people.Text == "")
 			{
-				MessageBox.Show("Select number of people");
+				MessageBox.Show("Vyber počet míst u stolu", "Pozor!", MessageBoxButton.OK, MessageBoxImage.Warning);
 				return;
 			}
 			try
 			{
 				if (Convert.ToInt32(people.Text) < 0 && Convert.ToInt32(people.Text) > 20)
 				{
-					MessageBox.Show("Select valid number of people");
+					MessageBox.Show("Vyber platný počet míst u stolu", "Pozor!", MessageBoxButton.OK, MessageBoxImage.Warning);
 					return;
 				}
 			}

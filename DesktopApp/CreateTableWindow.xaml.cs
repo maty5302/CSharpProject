@@ -34,20 +34,20 @@ namespace DesktopApp
 		{
 			if (people.Text == "")
 			{
-				MessageBox.Show("Select number of people");
+				MessageBox.Show("Vyber počet míst u stolu", "Pozor!", MessageBoxButton.OK, MessageBoxImage.Warning);
 				return;
 			}
 			try
 			{
 				if (Convert.ToInt32(people.Text) < 0 && Convert.ToInt32(people.Text) > 20)
 				{
-					MessageBox.Show("Select valid number of people");
+					MessageBox.Show("Vyber platný počet míst u stolu", "Pozor!", MessageBoxButton.OK, MessageBoxImage.Warning);
 					return;
 				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message);
+				MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
 			this.OnCreate?.Invoke(this.table);

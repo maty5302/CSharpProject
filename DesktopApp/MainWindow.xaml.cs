@@ -27,6 +27,7 @@ namespace DesktopApp
 	{
 		public List<TableReservation> Reservations {get;set;}
 		public List<RTable> Tables { get;set;}
+		public List<User> Users { get; set; }
 		private Thread t;
 
 		public async Task UpdateTable()
@@ -36,6 +37,8 @@ namespace DesktopApp
 			Reservations = DB.SelectAll<TableReservation>();
 			Tables.Clear();
 			Tables = DB.SelectAll<RTable>();
+			Users.Clear();
+			Users = DB.SelectAll<User>();
 			if(Application.Current == null)
 				return;
 			await Application.Current.Dispatcher.InvokeAsync(() =>
@@ -43,6 +46,7 @@ namespace DesktopApp
 				// Update the DataGrid with the loaded data
 				reservations.ItemsSource = Reservations;
 				tables.ItemsSource = Tables;
+				users.ItemsSource = Users;
 			});
 		}		
 
@@ -52,9 +56,10 @@ namespace DesktopApp
 			DB.CheckIfDbExists();
 			Reservations = DB.SelectAll<TableReservation>();
 			Tables = DB.SelectAll<RTable>();
+			Users = DB.SelectAll<User>();
 			reservations.DataContext = Reservations;	
 			tables.DataContext = Tables;
-
+			users.DataContext = Users;
 
 			t = new Thread(async () =>
 			{
@@ -85,7 +90,7 @@ namespace DesktopApp
 			}
 			catch (Exception)
 			{
-				MessageBox.Show("Nelze smazat stůl, který je obsazený.");
+				MessageBox.Show("Nelze smazat stůl, který je obsazený.", "Pozor!", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 		}
 
@@ -140,6 +145,40 @@ namespace DesktopApp
 				DB.Insert(r);
 			};
 			createTableWindow.ShowDialog();
+		}
+
+		private void Delete_User(object sender, RoutedEventArgs e)
+		{
+			Button b = sender as Button;
+			User u = b.DataContext as User;
+			try
+			{
+				DB.Delete(u);
+			}
+			catch (Exception)
+			{
+				MessageBox.Show("Nelze smazat uživatele, který má rezervace.","Pozor!",MessageBoxButton.OK,MessageBoxImage.Warning);
+			}
+
+		}
+
+		private void Update_User(object sender, RoutedEventArgs e)
+		{
+			Button b = sender as Button;
+			User u = b.DataContext as User;
+			User copy = new User(u.Name, u.Surname, u.Email,u.Password, u.isAdmin);
+			copy.Id = u.Id;
+			UpdateUserWindow window = new UpdateUserWindow(copy);
+			window.OnUpdate += (r) =>
+			{
+				u.Name = r.Name;
+				u.Surname = r.Surname;
+				u.Email = r.Email;
+				u.Password = r.Password;
+				u.isAdmin = r.isAdmin;
+				DB.Update(u);
+			};
+			window.ShowDialog();
 		}
 	}
 }

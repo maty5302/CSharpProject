@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopApp"
         mc:Ignorable="d"
-        Title="Detail rezervace" Height="300" Width="250" ResizeMode="NoResize">
+        Title="Detail rezervace" Height="250" Width="250" ResizeMode="NoResize">
     <StackPanel>
         <Label Content="Detail rezervace" HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="20"/>
         <DockPanel>
@@ -19,10 +19,6 @@
         <DockPanel>
             <Label Content="Email: "/>
             <Label Content="{Binding user.Email}"/>
-        </DockPanel>
-        <DockPanel>
-            <Label Content="Telefonní číslo:"/>
-            <Label Content="{Binding user.Phone}"/>
         </DockPanel>
         <DockPanel>
             <Label Content="Datum rezervace: "/>

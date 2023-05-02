@@ -58,6 +58,28 @@
                     <Button Grid.Row="1" Grid.Column="0" Content="Přidat stůl" Click="create_table" Margin="0,5,0,5"/> 
                 </Grid>
             </TabItem>
+            <TabItem Header="Správa uživatelů">
+                <Grid>
+                    <DataGrid x:Name="users" ItemsSource="{Binding}" IsReadOnly="True" AutoGenerateColumns="false">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Jméno" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Header="Příjmení" Binding="{Binding Surname}"/>
+                            <DataGridTextColumn Header="Email" Binding="{Binding Email}"/>
+                            <DataGridTextColumn Header="Heslo" Binding="{Binding Password}"/>
+                            <DataGridTemplateColumn >
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="Odstranit" Click="Delete_User" Margin="5"></Button>
+                                            <Button Content="Upravit" Click="Update_User" Margin="5"></Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>
