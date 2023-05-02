@@ -5,14 +5,9 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "DataLayer\DataLayer.csproj", "{D72ADFFC-523A-4151-8D59-969068BD1597}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "idktestorneco", "idktestorneco\idktestorneco.csproj", "{B4D91C73-405C-4803-90C6-F40F176B2D65}"
-	ProjectSection(ProjectDependencies) = postProject
-		{D72ADFFC-523A-4151-8D59-969068BD1597} = {D72ADFFC-523A-4151-8D59-969068BD1597}
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopApp", "DesktopApp\DesktopApp.csproj", "{F8F797BF-D44B-4F7D-8C5F-4CADF13D25FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{90B00AAC-475C-4641-A38C-6AADC2D7B6C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "WebApp\WebApp.csproj", "{90B00AAC-475C-4641-A38C-6AADC2D7B6C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,10 +19,6 @@ Global
 		{D72ADFFC-523A-4151-8D59-969068BD1597}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D72ADFFC-523A-4151-8D59-969068BD1597}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D72ADFFC-523A-4151-8D59-969068BD1597}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B4D91C73-405C-4803-90C6-F40F176B2D65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B4D91C73-405C-4803-90C6-F40F176B2D65}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B4D91C73-405C-4803-90C6-F40F176B2D65}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B4D91C73-405C-4803-90C6-F40F176B2D65}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F8F797BF-D44B-4F7D-8C5F-4CADF13D25FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F8F797BF-D44B-4F7D-8C5F-4CADF13D25FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8F797BF-D44B-4F7D-8C5F-4CADF13D25FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
