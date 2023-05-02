@@ -63,7 +63,7 @@ namespace WebApp.Controllers
 					}						
 				}
 			}
-			TableReservation reservation = new TableReservation(table,LoginManager.Get.User,reserve.Time,reserve.NumberOfPeople,true);
+			TableReservation reservation = new TableReservation(table,LoginManager.Get.User,reserve.Time,reserve.NumberOfPeople);
 			DB.Insert(reservation);
 			return RedirectToAction("UserReservations","Reservation");
 		}
