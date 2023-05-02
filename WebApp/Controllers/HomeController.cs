@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DataLayer;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebApp.Models;
 
@@ -15,6 +16,7 @@ namespace WebApp.Controllers
 
 		public IActionResult Index()
 		{
+			DB.CheckIfDbExists();
 			return View();
 		}
 

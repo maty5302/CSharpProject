@@ -44,15 +44,17 @@ namespace DesktopApp
 				reservations.ItemsSource = Reservations;
 				tables.ItemsSource = Tables;
 			});
-		}
+		}		
 
 		public MainWindow()
 		{
 			InitializeComponent();
+			DB.CheckIfDbExists();
 			Reservations = DB.SelectAll<TableReservation>();
 			Tables = DB.SelectAll<RTable>();
 			reservations.DataContext = Reservations;	
 			tables.DataContext = Tables;
+
 
 			t = new Thread(async () =>
 			{
