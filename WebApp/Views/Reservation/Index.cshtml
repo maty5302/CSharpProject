@@ -1,13 +1,47 @@
 ﻿@{
-
 	 ViewData["Title"] = "Rezervace";
 }
-
+@using DataLayer.Models 
+@model TableReserve
 <div class="row">
 	<div class="col-md-12">
-		<h2>Vytvoření nové rezervace</h2>
+		<h1>Rezervace</h1>
 		<hr />
-
+		<h3>Seznam stolů k rezervaci</h3>
+		<ul>
+		@foreach (RTable item in (List<RTable>)ViewBag.Tables)
+		{
+			<li>Číslo stolu: @item.Id - Počet míst k sezení: @item.NumberOfSeats</li>
+		}
+		</ul>
+		<br />
+		<br />
+		<hr />
+		<h3>Vytvoření nové rezervace</h3>
+		
+		<form class="form-check-inline flex-wrap" method="post" asp-action="Reserve" asp-controller="Reservation">
+			<div class="input-group flex-wrap">
+			<label class="form-label" asp-for="TableId"><b>Číslo stolu: </b></label>    
+			<select class="form-control" asp-for="TableId" >
+				@foreach(RTable item in ViewBag.Tables)
+				{
+					<option value="@item.Id">@item.Id</option>
+				})
+			</select>
+			<span asp-validation-for="TableId" class="text-danger"></span>
+        </div>
+        <div class="input-group flex-wrap">
+			<label class="form-label" asp-for="NumberOfPeople"><b>Počet lidí: </b></label>           
+			<input class="form-control" type="number" asp-for="NumberOfPeople" value="1" max="99" min="1" />
+			<span asp-validation-for="NumberOfPeople" class="text-danger"></span>
+        </div>
+		<div class="input-group flex-wrap">
+			<label class="form-label" asp-for="Time"><b>Čas rezervace:</b></label>
+			<input class="form-control" type="datetime-local" asp-for="Time" />
+			<span asp-validation-for="Time" class="text-danger"></span>
+		</div>
+		<button class="btn btn-primary" type="submit">Vytvořit rezervaci</button>
+		</form>
 	</div>
 </div>
 

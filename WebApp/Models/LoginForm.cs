@@ -15,6 +15,7 @@ namespace WebApp.Models
 		public string LastName { get; set; }
 		[Display(Name = "Email")]
 		[Required(ErrorMessage = "Email je povinný")]
+		[RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$", ErrorMessage = "Email není ve správném formátu")]
 		public string Email { get; set; }
 		[Display(Name = "Heslo")]
 		[Required(ErrorMessage = "Heslo je povinné")]

@@ -62,10 +62,10 @@ namespace WebApp.Controllers
 		[HttpPost]
 		public IActionResult ValidateRegister(LoginForm login)
 		{
-            if (ModelState.IsValid)
-            {
-                return View("Register");
-            }
+            //if (ModelState.IsValid)
+            //{
+            //    return View("Register");
+            //}
             if (DB.SelectBy<User>("Email", login.Email).Count() == 0)
 			{
 				if(login.Password != login.PasswordAgain)
@@ -79,6 +79,7 @@ namespace WebApp.Controllers
                 a.Email = login.Email;
                 a.Password = login.Password;
                 DB.Insert(a);
+				a = DB.SelectBy<User>("Email", login.Email).First();
                 LoginManager.Get.User = a;
                 return RedirectToAction("Index", "Home");
             }

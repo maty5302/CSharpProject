@@ -1,87 +1,95 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DataLayer;
+using DataLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using WebApp.Models;
 
 namespace WebApp.Controllers
 {
 	//[Authorize]
 	public class ReservationController : Controller
 	{
-		// GET: ReservationController
-		public ActionResult Index()
+
+		public IActionResult Index()
 		{
+			List<RTable> tables = DB.SelectAll<RTable>();
+            ViewBag.Tables = tables;
 			return View();
 		}
 
-		// GET: ReservationController/Details/5
-		public ActionResult Details(int id)
+		public IActionResult Reserve(TableReserve reserve)
 		{
+			List<RTable> tables = DB.SelectAll<RTable>();
+			ViewBag.Tables = tables;
+			RTable table = DB.SelectById<RTable>(reserve.TableId);
+			List<TableReservation>? r = DB.SelectBy<TableReservation>("tableId", reserve.TableId.ToString());
+			if(table is null)
+			{
+				ModelState.AddModelError("TableId", "Stůl neexistuje");
+				return View("Index");
+			}
+			if(reserve.NumberOfPeople > table.NumberOfSeats)
+			{
+				ModelState.AddModelError("NumberOfPeople", "Stůl nemá dostatečnou kapacitu");
+				return View("Index");
+			}
+			if(reserve.NumberOfPeople < 1)
+			{
+				ModelState.AddModelError("NumberOfPeople", "Počet lidí musí být větší než 0");
+				return View("Index");
+			}
+			if(reserve.Time.Hour < 10 || reserve.Time.Hour > 22)
+			{
+				ModelState.AddModelError("Time", "Nelze rezervovat mimo otevírací dobu");
+				return View("Index");
+			}
+
+			if(reserve.Time < DateTime.Now)
+			{
+				ModelState.AddModelError("Time", "Nelze rezervovat v minulosti");
+				return View("Index");
+			}
+			
+			if(r!=null)
+			{
+				foreach (var item in r)
+				{
+					if(item.ReservationTime==reserve.Time)
+					{
+						ModelState.AddModelError("Time", "Stůl je v této době již rezervován");
+						return View("Index");
+					}						
+				}
+			}
+			TableReservation reservation = new TableReservation(table,LoginManager.Get.User,reserve.Time,reserve.NumberOfPeople,true);
+			DB.Insert(reservation);
+			return RedirectToAction("UserReservations","Reservation");
+		}
+
+		public IActionResult UserReservations()
+		{
+			List<TableReservation> reserve = DB.SelectBy<TableReservation>("userId", LoginManager.Get.User.Id.ToString());
+			ViewBag.Reservations = reserve;
 			return View();
 		}
 
-		// GET: ReservationController/Create
-		public ActionResult Create()
+		public IActionResult CancelReservation(TableReserve t)
 		{
-			return View();
+			TableReservation reservation = DB.SelectById<TableReservation>(t.ReserveId);
+			if(reservation is null)
+			{
+				return RedirectToAction("UserReservations");
+			}
+			if(reservation.user.Id != LoginManager.Get.User.Id)
+			{
+				return RedirectToAction("UserReservations");
+			}
+			DB.Delete(reservation);
+			return RedirectToAction("UserReservations");
 		}
 
-		// POST: ReservationController/Create
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Create(IFormCollection collection)
-		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
-
-		// GET: ReservationController/Edit/5
-		public ActionResult Edit(int id)
-		{
-			return View();
-		}
-
-		// POST: ReservationController/Edit/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, IFormCollection collection)
-		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
-
-		// GET: ReservationController/Delete/5
-		public ActionResult Delete(int id)
-		{
-			return View();
-		}
-
-		// POST: ReservationController/Delete/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Delete(int id, IFormCollection collection)
-		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
 		public override void OnActionExecuting(ActionExecutingContext context)
 		{
 			if(LoginManager.Get.User is null)

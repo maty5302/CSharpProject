@@ -1,0 +1,32 @@
+﻿@{
+	ViewData["Title"] = "Moje rezervace";
+}
+@using DataLayer.Models
+@model TableReserve
+<div class="row">
+	<div class="col-md-12">
+		<h1>Moje rezervace</h1>
+		<hr />
+		<h3>Nadcházející rezervace</h3>
+		<ul>
+			@foreach(TableReservation item in ViewBag.Reservations)
+			{
+				@if(item.ReservationTime>DateTime.Now)
+				{
+					<li>Čas rezervace: @item.ReservationTime - Email: @item.user.Email - Počet lidí: @item.NumberOfPeople - Číslo stolu: @item.table.Id</li>
+				}
+			}
+		</ul>
+		<form class="form-check-inline flex-wrap" asp-controller="Reservation" asp-action="CancelReservation" method="post">
+			 <div class="input-group flex-wrap">
+			<select class="form-control" asp-for="ReserveId">
+				@foreach(TableReservation item in ViewBag.Reservations)
+				{
+					<option value="@item.Id">@item.ReservationTime</option>
+				}
+			</select>
+			<button class="btn btn-danger" type="submit">Smazat rezervaci</button>
+			</div>
+		</form>
+	</div>
+</div>
