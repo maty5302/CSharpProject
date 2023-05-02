@@ -58,7 +58,21 @@ namespace DataLayer
 			}
 		}
 
-		public static void CreateTable<T>()
+		public static void CheckIfDbExists()
+		{
+			try
+			{
+				SelectAll<TableReservation>();
+			}
+			catch (Exception)
+			{
+				CreateTable<TableReservation>();
+				CreateTable<RTable>();
+				CreateTable<User>();
+			}
+		}
+
+		private static void CreateTable<T>()
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.Append("CREATE TABLE IF NOT EXISTS ").Append("[").Append(typeof(T).Name).Append("]").AppendLine("(");
