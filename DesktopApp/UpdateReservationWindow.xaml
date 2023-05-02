@@ -6,7 +6,7 @@
         xmlns:extToolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit/extended"
         xmlns:local="clr-namespace:DesktopApp"
         mc:Ignorable="d"
-        Title="Aktualizace rezervace" Height="300" Width="250">
+        Title="Aktualizace rezervace" Height="300" Width="250" ResizeMode="NoResize">
     <StackPanel>
         <Label Content="Aktualizace rezervace" HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="20"/>
         <DockPanel>

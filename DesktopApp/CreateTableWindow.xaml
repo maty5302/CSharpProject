@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopApp"
         mc:Ignorable="d"
-        Title="Přidat stůl" Height="150" Width="300">
+        Title="Přidat stůl" Height="150" Width="300" ResizeMode="NoResize">
     <StackPanel>
         <Label Content="Přidání stolu" HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="20"/>
         <DockPanel>

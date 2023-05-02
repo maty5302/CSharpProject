@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopApp"
         mc:Ignorable="d"
-        Title="UpdateTableWindow" Height="180" Width="250">
+        Title="UpdateTableWindow" Height="180" Width="250" ResizeMode="NoResize">
     <StackPanel>
         <Label Content="Aktualizace stolu" HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="20"/>
         <DockPanel>

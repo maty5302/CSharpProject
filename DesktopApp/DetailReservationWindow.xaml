@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopApp"
         mc:Ignorable="d"
-        Title="Detail rezervace" Height="300" Width="250">
+        Title="Detail rezervace" Height="300" Width="250" ResizeMode="NoResize">
     <StackPanel>
         <Label Content="Detail rezervace" HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="20"/>
         <DockPanel>
