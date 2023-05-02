@@ -38,13 +38,12 @@ namespace DesktopApp
 			Tables = DB.SelectAll<RTable>();
 			if(Application.Current == null)
 				return;
-			Application.Current.Dispatcher.Invoke(() =>
+			await Application.Current.Dispatcher.InvokeAsync(() =>
 			{
 				// Update the DataGrid with the loaded data
 				reservations.ItemsSource = Reservations;
 				tables.ItemsSource = Tables;
 			});
-			await Task.Delay(10);
 		}
 
 		public MainWindow()
@@ -93,7 +92,7 @@ namespace DesktopApp
 			Button btn = sender as Button;
 			TableReservation reservation = btn.DataContext as TableReservation;
 			//make copy of reservation and pass it to the window
-			TableReservation copy = new TableReservation(reservation.table, reservation.user, reservation.ReservationTime, reservation.NumberOfPeople, reservation.IsReserved);
+			TableReservation copy = new TableReservation(reservation.table, reservation.user, reservation.ReservationTime, reservation.NumberOfPeople);
 			UpdateReservationWindow window = new UpdateReservationWindow(copy);
 			window.OnUpdate += (r) =>
 			{
