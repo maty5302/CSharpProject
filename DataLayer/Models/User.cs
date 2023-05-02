@@ -13,18 +13,16 @@ namespace DataLayer.Models
 		public string Surname { get; set; }
 		public string Email { get; set; }
 		public string Password { get; set; }
-		public string Phone { get; set; }
 		public bool isAdmin { get; set; }
 
 		public User() { }
 
-		public User(string name, string surname, string email, string password, string phone, bool isAdmin)
+		public User(string name, string surname, string email, string password, bool isAdmin)
 		{
 			Name = name;
 			Surname = surname;
 			Email = email;
 			Password = password;
-			Phone = phone;
 			this.isAdmin = isAdmin;
 		}
 	}
