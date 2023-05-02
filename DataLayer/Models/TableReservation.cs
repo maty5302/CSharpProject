@@ -13,7 +13,6 @@ namespace DataLayer.Models
 		public User user { get; set; }
 		public DateTime ReservationTime { get; set; }
 		public int NumberOfPeople { get; set; }
-		public bool IsReserved { get; set; }
 
 		public TableReservation() { }
 
@@ -22,11 +21,7 @@ namespace DataLayer.Models
 			this.table = table;
 			this.user = user;
 			ReservationTime = reservationTime;
-			if (numberOfPeople <= table.NumberOfSeats)
-				NumberOfPeople = numberOfPeople;
-			else
-				return;
-			IsReserved = isReserved;
+			NumberOfPeople = numberOfPeople;
 		}
 	}
 }
