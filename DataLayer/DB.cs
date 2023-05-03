@@ -63,6 +63,8 @@ namespace DataLayer
 			try
 			{
 				SelectAll<TableReservation>();
+				SelectAll<RTable>();
+				SelectAll<User>();
 			}
 			catch (Exception)
 			{
